@@ -1,0 +1,8 @@
+body { font-family: system-ui, Arial; margin: 0; }
+.header { padding: 16px; border-bottom: 1px solid #ddd; }
+.brand { text-decoration: none; font-weight: 700; }
+.container { padding: 24px; max-width: 800px; }
+.content { line-height: 1.6; font-size: 1.05rem; }
+.footer { padding: 16px; border-top: 1px solid #ddd; }
+.nav { margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; }
+.nav-link { text-decoration: none; }

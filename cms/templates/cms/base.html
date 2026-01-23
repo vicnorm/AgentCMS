@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>AgentCMS</title>
+    <link rel="stylesheet" href="{% static 'cms/style.css' %}">
+    <nav class="nav">
+    {% for p in menu_pages %}
+        <a class="nav-link" href="/{{ p.slug }}/">{{ p.title }}</a>
+    {% endfor %}
+    </nav>
+  </head>
+  <body>
+    <header class="header">
+      <a href="/" class="brand">AgentCMS</a>
+    </header>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <small>Local dev</small>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "cms/base.html" %}
+
+{% block content %}
+  <h1>Pages</h1>
+  <ul>
+    {% for page in pages %}
+      <li><a href="/{{ page.slug }}/">{{ page.title }}</a></li>
+    {% empty %}
+      <li>No published pages yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
