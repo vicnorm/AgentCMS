@@ -31,26 +31,27 @@ This project is designed as a learning project and a foundation for building a m
 
 ## Project Structure
 
+```text
 AgentCMS/
-├── cms/ # Main CMS application
-│ ├── migrations/ # Database migrations
-│ ├── static/cms/ # Static files (CSS)
-│ ├── templates/cms/ # HTML templates
-│ ├── admin.py # Admin configuration
-│ ├── context_processors.py# Navigation menu support
-│ ├── models.py # Page model
-│ ├── urls.py # App URL routes
-│ └── views.py # Page views
+├── cms/                     # Main CMS application
+│   ├── migrations/          # Database migrations
+│   ├── static/cms/          # Static files (CSS)
+│   ├── templates/cms/       # HTML templates
+│   ├── admin.py             # Admin configuration
+│   ├── context_processors.py# Navigation menu support
+│   ├── models.py            # Page model
+│   ├── urls.py              # App URL routes
+│   └── views.py             # Page views
 │
-├── config/ # Django project configuration
-│ ├── settings.py # Main settings
-│ ├── urls.py # Root URL configuration
-│ └── wsgi.py / asgi.py
+├── config/                  # Django project configuration
+│   ├── settings.py          # Main settings
+│   ├── urls.py              # Root URL configuration
+│   └── wsgi.py / asgi.py
 │
-├── manage.py # Django management entry point
-├── requirements.txt # Python dependencies
-├── .gitignore # Git ignored files
-└── README.md # Project documentation
+├── manage.py                # Django management entry point
+├── requirements.txt         # Python dependencies
+├── .gitignore               # Git ignored files
+└── README.md                # Project documentation
 
 
 ---
