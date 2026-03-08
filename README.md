@@ -3,7 +3,6 @@
 AgentCMS is a lightweight Content Management System built with **Django**.  
 It allows administrators to create and manage simple website pages through the Django admin panel.
 
-This project is designed as a learning project and a foundation for building a more complete CMS over time.
 
 ---
 
@@ -16,7 +15,7 @@ This project is designed as a learning project and a foundation for building a m
 - Automatic navigation menu showing published pages
 - Shared layout using `base.html`
 - Static file support (CSS)
-- SQLite database by default (easy to switch later)
+- SQLite database (possibility to switch to Postgresql)
 
 ---
 
