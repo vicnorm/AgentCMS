@@ -1,12 +1,28 @@
 {% extends "cms/base.html" %}
 
 {% block content %}
-  <h1>Pages</h1>
-  <ul>
-    {% for page in pages %}
-      <li><a href="/{{ page.slug }}/">{{ page.title }}</a></li>
-    {% empty %}
-      <li>No published pages yet.</li>
-    {% endfor %}
-  </ul>
+  <section class="hero">
+    <p class="eyebrow">Content hub</p>
+    <h1>Welcome to AgentCMS</h1>
+    <p class="hero-copy">Browse published pages, keep your docs tidy, and ship updates fast.</p>
+  </section>
+
+  <section class="page-grid-section">
+    <div class="section-heading-row">
+      <h2>Published pages</h2>
+      <span class="page-count">{{ pages|length }} total</span>
+    </div>
+
+    <div class="page-grid">
+      {% for page in pages %}
+        <article class="page-card">
+          <h3><a href="/{{ page.slug }}/">{{ page.title }}</a></h3>
+          <p class="card-copy">Open this page to read and manage its full content.</p>
+          <a class="card-link" href="/{{ page.slug }}/">Read page →</a>
+        </article>
+      {% empty %}
+        <p class="empty-state">No published pages yet. Create one in admin and publish it to see it here.</p>
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}
