@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cms',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -115,3 +116,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 400,
+    'menubar': False,
+    'plugins': 'lists link',
+    'toolbar': 'undo redo | formatselect | bold italic | bullist numlist | link',
+}
