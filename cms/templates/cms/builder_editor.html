@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Builder Editor - {{ page.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/studio_style.css' %}">
+    <link rel="icon" href="{% static 'img/design_it_logo.png' %}" type="image/png">
+    <base href="{% static '' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="builder-state-url" content="{% url 'builder_state' page_id=page.id %}">
+    <meta name="builder-save-url" content="{% url 'builder_save' page_id=page.id %}">
+    <meta name="page-id" content="{{ page.id }}">
+</head>
+<body>
+    <header class="top-navbar" role="banner">
+        <div class="nav-brand">
+            <img src="{% static 'img/design_it_logo.png' %}" alt="DesignIT Logo" class="nav-logo">
+            <span class="brand-text">
+                <span class="brand-name">DesignIT</span><span class="brand-subtitle"> - {{ page.title }}</span>
+            </span>
+        </div>
+        <nav class="nav-links" role="navigation" aria-label="Builder actions">
+            <button id="undo" type="button" aria-label="Undo" disabled>↶ Undo</button>
+            <button id="redo" type="button" aria-label="Redo" disabled>↷ Redo</button>
+            <button id="clear" type="button" aria-label="Clear canvas">🗑️ Clear</button>
+            <button id="export" type="button" aria-label="Export design">💾 Export</button>
+            <button id="save-to-cms" type="button" aria-label="Save to CMS">✅ Save to CMS</button>
+        </nav>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <aside class="menu" role="complementary" aria-label="Component library">
+            <h2 id="elements-heading">Elements</h2>
+            <div class="elements-container" role="list" aria-labelledby="elements-heading">
+                <div class="category-dropdown" data-category="html">
+                    <button class="dropdown-header" aria-expanded="false" aria-controls="html-elements">
+                        <span class="dropdown-icon">▶</span>
+                        <span class="dropdown-title">HTML Elements</span>
+                    </button>
+                    <div class="dropdown-content" id="html-elements" role="group"></div>
+                </div>
+                <div class="category-dropdown" data-category="javascript">
+                    <button class="dropdown-header" aria-expanded="false" aria-controls="javascript-elements">
+                        <span class="dropdown-icon">▶</span>
+                        <span class="dropdown-title">JavaScript Elements</span>
+                    </button>
+                    <div class="dropdown-content" id="javascript-elements" role="group"></div>
+                </div>
+                <div class="category-dropdown" data-category="webapis">
+                    <button class="dropdown-header" aria-expanded="false" aria-controls="webapis-elements">
+                        <span class="dropdown-icon">▶</span>
+                        <span class="dropdown-title">Web APIs</span>
+                    </button>
+                    <div class="dropdown-content" id="webapis-elements" role="group"></div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="resizer" id="resizer1" role="separator" aria-orientation="vertical" tabindex="0"></div>
+
+        <section class="canvas" id="canvas" role="region" aria-label="Design canvas">
+            <h2 id="canvas-heading">Canvas</h2>
+        </section>
+
+        <div class="resizer" id="resizer2" role="separator" aria-orientation="vertical" tabindex="0"></div>
+
+        <aside class="side-panel" role="complementary" aria-label="Code and references">
+            <div class="tab-container" role="tablist" aria-label="Code view tabs">
+                <button class="copy-btn" id="copyBtn" type="button" title="Copy content" aria-label="Copy content">📋</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="tab1" id="tab-button-1">HTML</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="tab2" id="tab-button-2">CSS</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="tab3" id="tab-button-3">JS</button>
+                <button class="tab" role="tab" aria-selected="false" aria-controls="tab4" id="tab-button-4">References</button>
+            </div>
+
+            <div id="tab1" class="tab-content" role="tabpanel"><pre></pre></div>
+            <div id="tab2" class="tab-content" role="tabpanel"><pre></pre></div>
+            <div id="tab3" class="tab-content" role="tabpanel"><pre></pre></div>
+            <div id="tab4" class="tab-content" role="tabpanel"><div><p></p></div></div>
+        </aside>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="{% static 'js/app.js' %}"></script>
+    <script type="module" src="{% static 'cms/builder_integration.js' %}"></script>
+</body>
+</html>

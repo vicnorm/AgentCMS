@@ -2,5 +2,15 @@
 
 {% block content %}
   <h1>{{ page.title }}</h1>
-  <div class="content">{{ page.sanitized_body|safe }}</div>
+  {% if page.has_builder_content %}
+    {% if page.css_content %}
+      <style>{{ page.css_content|safe }}</style>
+    {% endif %}
+    <div class="content">{{ page.html_content|safe }}</div>
+    {% if page.js_content %}
+      <script>{{ page.js_content|safe }}</script>
+    {% endif %}
+  {% else %}
+    <div class="content">{{ page.sanitized_body|safe }}</div>
+  {% endif %}
 {% endblock %}
