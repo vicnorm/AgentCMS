@@ -17,6 +17,7 @@ A drag-and-drop web design studio for creating and exporting HTML components wit
 
 ![webDesignStudio_APIs](https://github.com/user-attachments/assets/df2aca06-0189-4123-944f-738f1e1cec1d)
 
+
 ## Project Structure
 
 ```

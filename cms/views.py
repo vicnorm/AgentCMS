@@ -60,4 +60,5 @@ def builder_save(request, page_id):
     page.is_builder_page = True
     page.save(update_fields=[*content_fields, "is_builder_page", "updated_at"])
 
+
     return JsonResponse({"status": "ok", "page_id": page.id})
