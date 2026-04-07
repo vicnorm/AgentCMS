@@ -33,6 +33,10 @@ class Page(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     body = models.TextField(blank=True)
+    html_content = models.TextField(blank=True, default="")
+    css_content = models.TextField(blank=True, default="")
+    js_content = models.TextField(blank=True, default="")
+    is_builder_page = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,3 +57,12 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def has_builder_content(self):
+        return bool(
+            self.is_builder_page
+            or self.html_content.strip()
+            or self.css_content.strip()
+            or self.js_content.strip()
+        )
