@@ -8,7 +8,7 @@ class ComponentManager {
         this.jsComponents = [];
         this.apiComponents = [];
         this.dropdownManager = null;
-        this.init();
+        this.ready = this.init();
     }
 
     /**
@@ -37,7 +37,7 @@ class ComponentManager {
      */
     async loadComponents() {
         try {
-            const response = await fetch('./data/html_components.json');
+            const response = await fetch(this.resolveAssetUrl('data/html_components.json'));
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -53,7 +53,7 @@ class ComponentManager {
      */
     async loadJSComponents() {
         try {
-            const response = await fetch('./data/js_components.json');
+            const response = await fetch(this.resolveAssetUrl('data/js_components.json'));
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -69,7 +69,7 @@ class ComponentManager {
      */
     async loadAPIComponents() {
         try {
-            const response = await fetch('./data/api_components.json');
+            const response = await fetch(this.resolveAssetUrl('data/api_components.json'));
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -78,6 +78,17 @@ class ComponentManager {
             console.error('Error loading API components:', error);
             throw error;
         }
+    }
+
+    /**
+     * Resolve builder asset paths for standalone and Django static embeds.
+     * @param {string} path - Path relative to the builder root
+     * @returns {string} Resolved URL
+     */
+    resolveAssetUrl(path) {
+        const configuredBase = window.AgentCMSBuilder?.assetBaseUrl || './';
+        const baseUrl = new URL(configuredBase, window.location.href);
+        return new URL(path, baseUrl).toString();
     }
 
     /**
@@ -272,7 +283,7 @@ class ComponentManager {
 
         const icon = document.createElement('span');
         icon.className = 'dropdown-icon';
-        icon.textContent = '▶';
+        icon.textContent = '>';
 
         const titleSpan = document.createElement('span');
         titleSpan.className = 'dropdown-title';

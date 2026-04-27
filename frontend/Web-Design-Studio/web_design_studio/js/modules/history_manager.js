@@ -56,7 +56,7 @@ class HistoryManager {
             tab1Content: this.getTabContent('tab1'),
             tab2Content: this.getTabContent('tab2'),
             tab3Content: this.getTabContent('tab3'),
-            tab3Structure: this.getTabStructure('tab3'),
+            tab4Structure: this.getTabStructure('tab4'),
             timestamp: Date.now()
         };
 
@@ -176,7 +176,7 @@ class HistoryManager {
             tab1Content: this.getTabContent('tab1'),
             tab2Content: this.getTabContent('tab2'),
             tab3Content: this.getTabContent('tab3'),
-            tab3Structure: this.getTabStructure('tab3'),
+            tab4Structure: this.getTabStructure('tab4'),
             timestamp: Date.now()
         };
         this.redoStack.push(currentState);
@@ -192,9 +192,9 @@ class HistoryManager {
             this.setTabContent('tab2', lastState.tab2Content);
             this.setTabContent('tab3', lastState.tab3Content);
             
-            // Restore tab3 structure (references) if available
-            if (lastState.tab3Structure !== undefined) {
-                this.setTabStructure('tab3', lastState.tab3Structure);
+            // Restore references tab structure if available
+            if (lastState.tab4Structure !== undefined) {
+                this.setTabStructure('tab4', lastState.tab4Structure);
             }
         }
 
@@ -218,7 +218,7 @@ class HistoryManager {
             tab1Content: this.getTabContent('tab1'),
             tab2Content: this.getTabContent('tab2'),
             tab3Content: this.getTabContent('tab3'),
-            tab3Structure: this.getTabStructure('tab3'),
+            tab4Structure: this.getTabStructure('tab4'),
             timestamp: Date.now()
         };
         this.history.push(currentState);
@@ -234,9 +234,9 @@ class HistoryManager {
             this.setTabContent('tab2', redoState.tab2Content);
             this.setTabContent('tab3', redoState.tab3Content);
             
-            // Restore tab3 structure (references) if available
-            if (redoState.tab3Structure !== undefined) {
-                this.setTabStructure('tab3', redoState.tab3Structure);
+            // Restore references tab structure if available
+            if (redoState.tab4Structure !== undefined) {
+                this.setTabStructure('tab4', redoState.tab4Structure);
             }
         }
 

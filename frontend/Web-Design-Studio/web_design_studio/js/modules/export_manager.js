@@ -73,23 +73,14 @@ class ExportManager {
             throw new Error('Canvas not found');
         }
 
-        // Get canvas content without the header
-        const canvasContent = canvas.innerHTML.replace('<h3>Canvas</h3>', '');
-
-        // Get CSS from canvas styles
-        const cssContent = this.extractCSSFromCanvas(canvas);
-
-        // Get JavaScript from tab3 if it exists
-        const jsTab = document.getElementById('tab3');
-        const jsContent = jsTab ? jsTab.querySelector('pre')?.textContent || '' : '';
-
-        // Remove style elements from content
-        const contentWithoutStyle = canvasContent.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+        const rendered = this.canvasManager?.generateRenderedOutput
+            ? this.canvasManager.generateRenderedOutput()
+            : { html: '', css: this.extractCSSFromCanvas(canvas), js: '' };
 
         return {
-            content: contentWithoutStyle,
-            css: cssContent,
-            js: jsContent,
+            content: rendered.html,
+            css: rendered.css,
+            js: rendered.js,
             timestamp: new Date().toISOString()
         };
     }

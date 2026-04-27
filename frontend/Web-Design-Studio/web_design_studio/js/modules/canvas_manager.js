@@ -6,6 +6,7 @@ class CanvasManager {
         this.historyManager = historyManager;
         this.notificationManager = notificationManager;
         this.canvas = null;
+        this.canvasHeadingHTML = '<h2 id="canvas-heading">Canvas</h2><p id="canvas-description" class="sr-only">Drop components from the library here to build the page.</p>';
         this.init();
     }
 
@@ -199,11 +200,12 @@ class CanvasManager {
     createComponentWrapper(data) {
         const wrapper = document.createElement('div');
         wrapper.className = 'component-wrapper';
+        const componentId = data.id || this.generateComponentId();
         
         // Create delete button
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'component-delete-btn';
-        deleteBtn.innerHTML = '×';
+        deleteBtn.innerHTML = '&times;';
         deleteBtn.setAttribute('aria-label', 'Delete component');
         deleteBtn.setAttribute('title', 'Delete this component');
         deleteBtn.type = 'button';
@@ -230,8 +232,22 @@ class CanvasManager {
         wrapper.setAttribute('data-component-css', data.css || '');
         wrapper.setAttribute('data-component-js', data.js || '');
         wrapper.setAttribute('data-component-reference', data.reference || '');
+        wrapper.setAttribute('data-component-type', data.type || 'html');
+        wrapper.setAttribute('data-builder-component-id', componentId);
         
         return wrapper;
+    }
+
+    /**
+     * Generate a stable component identifier for saved builder state.
+     * @returns {string} Component ID
+     */
+    generateComponentId() {
+        if (window.crypto?.randomUUID) {
+            return window.crypto.randomUUID();
+        }
+
+        return `component-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     }
 
     /**
@@ -431,10 +447,18 @@ class CanvasManager {
         }
 
         // Reset canvas content
-        this.canvas.innerHTML = '<h3>Canvas</h3>';
+        this.resetCanvas();
 
         // Clear tabs
         this.clearTabs();
+    }
+
+    /**
+     * Reset the canvas to its empty editor shell.
+     */
+    resetCanvas() {
+        if (!this.canvas) return;
+        this.canvas.innerHTML = this.canvasHeadingHTML;
     }
 
     /**
@@ -484,7 +508,11 @@ class CanvasManager {
     getCanvasContent() {
         if (!this.canvas) return '';
         
-        return this.canvas.innerHTML.replace('<h3>Canvas</h3>', '');
+        const clone = this.canvas.cloneNode(true);
+        clone.querySelector('#canvas-heading')?.remove();
+        clone.querySelector('#canvas-description')?.remove();
+        clone.querySelectorAll('style[data-component-style="true"]').forEach((style) => style.remove());
+        return clone.innerHTML;
     }
 
     /**
@@ -505,7 +533,7 @@ class CanvasManager {
     setCanvasContent(content) {
         if (!this.canvas) return;
         
-        this.canvas.innerHTML = content;
+        this.canvas.innerHTML = content || this.canvasHeadingHTML;
     }
 
     /**
@@ -682,6 +710,122 @@ class CanvasManager {
                 }
             }
         });
+    }
+
+    /**
+     * Load a saved builder state into the editor.
+     * @param {Object} builderState - Persisted builder state
+     */
+    loadBuilderState(builderState) {
+        if (!this.canvas) return;
+
+        this.resetCanvas();
+        this.clearTabs();
+
+        const components = Array.isArray(builderState?.components) ? builderState.components : [];
+        components.forEach((component) => {
+            const wrapper = this.createComponentWrapper(component);
+            this.canvas.appendChild(wrapper);
+            this.applyComponentCSS(component.css || '');
+
+            if (component.js) {
+                this.executeComponentJS(component.js, wrapper);
+            }
+        });
+
+        this.rebuildTabs();
+
+        if (this.historyManager) {
+            this.historyManager.clearHistory();
+        }
+    }
+
+    /**
+     * Extract current canvas components in display order.
+     * @returns {Array<Object>} Component state list
+     */
+    extractComponents() {
+        if (!this.canvas) return [];
+
+        return Array.from(this.canvas.querySelectorAll('.component-wrapper')).map((wrapper, index) => {
+            const contentContainer = wrapper.querySelector('.component-content');
+            return {
+                id: wrapper.getAttribute('data-builder-component-id') || `component-${index + 1}`,
+                title: wrapper.getAttribute('data-component-title') || 'Component',
+                type: wrapper.getAttribute('data-component-type') || 'html',
+                html: contentContainer ? contentContainer.innerHTML : '',
+                css: wrapper.getAttribute('data-component-css') || '',
+                js: wrapper.getAttribute('data-component-js') || '',
+                reference: wrapper.getAttribute('data-component-reference') || ''
+            };
+        });
+    }
+
+    /**
+     * Get the serializable builder state.
+     * @returns {Object} Builder state
+     */
+    getBuilderState() {
+        return {
+            version: 1,
+            source: 'builder',
+            components: this.extractComponents()
+        };
+    }
+
+    /**
+     * Generate render fields used by the CMS preview and API validation.
+     * The server independently regenerates these from builder_json before saving.
+     * @returns {{html: string, css: string, js: string}} Render fields
+     */
+    generateRenderedOutput() {
+        const components = this.extractComponents();
+        const html = components.map((component) => (
+            `<div class="agentcms-builder-component" data-builder-component-id="${this.escapeAttribute(component.id)}">${component.html}</div>`
+        )).join('\n');
+        const css = components
+            .map((component) => component.css)
+            .filter((cssContent) => cssContent.trim())
+            .join('\n\n');
+        const js = components
+            .filter((component) => component.js.trim())
+            .map((component) => {
+                const selector = `[data-builder-component-id="${component.id}"]`;
+                return `(function() {
+  const componentRoot = document.querySelector(${JSON.stringify(selector)});
+  if (!componentRoot) {
+    return;
+  }
+${component.js}
+}());`;
+            })
+            .join('\n\n');
+
+        return { html, css, js };
+    }
+
+    /**
+     * Build the payload expected by the AgentCMS builder API.
+     * @returns {Object} Save payload
+     */
+    getBuilderPayload() {
+        return {
+            builder_json: this.getBuilderState(),
+            rendered: this.generateRenderedOutput()
+        };
+    }
+
+    /**
+     * Escape text for HTML attribute values.
+     * @param {string} value - Raw value
+     * @returns {string} Escaped value
+     */
+    escapeAttribute(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     }
 }
 

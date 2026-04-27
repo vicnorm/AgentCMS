@@ -26,27 +26,75 @@ class PageAdminForm(forms.ModelForm):
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     form = PageAdminForm
-    list_display = ("title", "slug", "is_published", "is_builder_page", "updated_at")
-    list_filter = ("is_published",)
-    search_fields = ("title", "body")
-    prepopulated_fields = {"slug": ("title",)}
-    readonly_fields = ("builder_editor_link",)
-    fields = (
+    list_display = (
         "title",
         "slug",
-        "body",
-        "html_content",
-        "css_content",
-        "js_content",
-        "is_builder_page",
         "is_published",
+        "is_builder_page",
+        "builder_updated_at",
+        "builder_published_at",
+        "updated_at",
+    )
+    list_filter = ("is_published", "is_builder_page")
+    search_fields = ("title", "body", "published_html", "draft_html")
+    prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = (
         "builder_editor_link",
+        "builder_json",
+        "draft_html",
+        "draft_css",
+        "draft_js",
+        "published_html",
+        "published_css",
+        "published_js",
+        "builder_updated_at",
+        "builder_published_at",
+    )
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "title",
+                    "slug",
+                    "is_published",
+                    "is_builder_page",
+                    "builder_editor_link",
+                )
+            },
+        ),
+        ("Legacy content", {"fields": ("body",)}),
+        (
+            "Builder draft",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "builder_json",
+                    "draft_html",
+                    "draft_css",
+                    "draft_js",
+                    "builder_updated_at",
+                ),
+            },
+        ),
+        (
+            "Published builder output",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "published_html",
+                    "published_css",
+                    "published_js",
+                    "builder_published_at",
+                ),
+            },
+        ),
     )
 
     def builder_editor_link(self, obj):
         if not obj or not obj.pk:
             return "Save this page first to open the builder editor."
         url = reverse("builder_editor", kwargs={"page_id": obj.pk})
-        return format_html('<a class="button" href="{}">Open Builder Editor</a>', url)
+        return format_html('<a class="button" href="{}">Open Builder</a>', url)
 
     builder_editor_link.short_description = "Builder"

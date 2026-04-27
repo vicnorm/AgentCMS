@@ -117,7 +117,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "frontend" / "Web-Design-Studio" / "web_design_studio",
+    ("web_design_studio", BASE_DIR / "frontend" / "Web-Design-Studio" / "web_design_studio"),
 ]
 
 

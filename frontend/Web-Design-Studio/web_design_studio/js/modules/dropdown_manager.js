@@ -164,7 +164,7 @@ class DropdownManager {
         const dropdownHtml = `
             <div class="category-dropdown" data-category="${category}">
                 <button class="dropdown-header" aria-expanded="${expanded}" aria-controls="${category}-elements">
-                    <span class="dropdown-icon">▶</span>
+                    <span class="dropdown-icon">&gt;</span>
                     <span class="dropdown-title">${title}</span>
                 </button>
                 <div class="dropdown-content ${expanded ? 'expanded' : ''}" id="${category}-elements" role="group" aria-labelledby="${category}-dropdown">

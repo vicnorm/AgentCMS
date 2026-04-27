@@ -53,6 +53,7 @@ class App {
 
             // Mark as initialized
             this.isInitialized = true;
+            window.dispatchEvent(new CustomEvent('designit:ready', { detail: { app: this } }));
 
             console.log('DesignIT Studio initialized successfully');
 
@@ -73,8 +74,7 @@ class App {
     async initializeComponents() {
         try {
             this.managers.component = new ComponentManager(this.managers.notification);
-            // ComponentManager initializes itself, so we wait for it to complete
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await this.managers.component.ready;
         } catch (error) {
             console.error('Failed to initialize components:', error);
             throw new Error('Component initialization failed');
@@ -111,7 +111,11 @@ class App {
                 // Ctrl+S to save/export
                 if (e.ctrlKey && e.key === 's') {
                     e.preventDefault();
-                    this.managers.export?.exportDesign();
+                    if (window.AgentCMSBuilder) {
+                        document.getElementById('save-to-cms')?.click();
+                    } else {
+                        this.managers.export?.exportDesign();
+                    }
                 }
 
                 // Ctrl+Shift+C to clear
@@ -160,12 +164,12 @@ class App {
     showHelp() {
         const helpMessage = `
 Keyboard Shortcuts:
-• Ctrl+Z: Undo
-• Ctrl+E: Export
-• Ctrl+S: Save/Export
-• Ctrl+Shift+C: Clear canvas
-• F1: Show this help
-• Esc: Close notifications
+- Ctrl+Z: Undo
+- Ctrl+E: Export
+- Ctrl+S: Save/Export
+- Ctrl+Shift+C: Clear canvas
+- F1: Show this help
+- Esc: Close notifications
 
 Drag and drop components from the left panel to the canvas.
 Use the tabs on the right to view HTML, CSS, and references.

@@ -126,7 +126,8 @@ class TabManager {
             const tabLabels = {
                 'tab1': 'HTML code tab',
                 'tab2': 'CSS code tab', 
-                'tab3': 'References tab'
+                'tab3': 'JavaScript code tab',
+                'tab4': 'References tab'
             };
             statusRegion.textContent = `${tabLabels[tabName] || 'Tab'} activated`;
         }
