@@ -33,10 +33,16 @@ class Page(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     body = models.TextField(blank=True)
-    html_content = models.TextField(blank=True, default="")
-    css_content = models.TextField(blank=True, default="")
-    js_content = models.TextField(blank=True, default="")
+    builder_json = models.JSONField(blank=True, default=dict)
+    draft_html = models.TextField(blank=True, default="")
+    draft_css = models.TextField(blank=True, default="")
+    draft_js = models.TextField(blank=True, default="")
+    published_html = models.TextField(blank=True, default="")
+    published_css = models.TextField(blank=True, default="")
+    published_js = models.TextField(blank=True, default="")
     is_builder_page = models.BooleanField(default=False)
+    builder_updated_at = models.DateTimeField(blank=True, null=True)
+    builder_published_at = models.DateTimeField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -60,9 +66,16 @@ class Page(models.Model):
 
     @property
     def has_builder_content(self):
+        return self.has_published_builder_content
+
+    @property
+    def has_published_builder_content(self):
         return bool(
             self.is_builder_page
-            or self.html_content.strip()
-            or self.css_content.strip()
-            or self.js_content.strip()
+            and (
+                self.builder_published_at
+                or self.published_html.strip()
+                or self.published_css.strip()
+                or self.published_js.strip()
+            )
         )
