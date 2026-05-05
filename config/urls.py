@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path("", include("cms.urls")),
+    path("api/knime/", include("api.urls")),
 ]
