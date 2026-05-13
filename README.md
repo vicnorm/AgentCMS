@@ -31,26 +31,49 @@ It allows administrators to create and manage simple website pages through the D
 
 ```text
 AgentCMS/
-├── cms/                     # Main CMS application
-│   ├── migrations/          # Database migrations
-│   ├── static/cms/          # Static files (CSS)
-│   ├── templates/cms/       # HTML templates
-│   ├── admin.py             # Admin configuration
-│   ├── context_processors.py# Navigation menu support
-│   ├── models.py            # Page model
-│   ├── urls.py              # App URL routes
-│   └── views.py             # Page views
-│
-├── config/                  # Django project configuration
-│   ├── settings.py          # Main settings
-│   ├── urls.py              # Root URL configuration
-│   └── wsgi.py / asgi.py
-│
-├── manage.py                # Django management entry point
-├── requirements.txt         # Python dependencies
-├── .gitignore               # Git ignored files
-└── README.md                # Project documentation
+|-- cms/                                      # Main Django CMS application
+|   |-- migrations/                           # Database migrations for Page and builder fields
+|   |-- static/cms/                           # CMS styles and Django builder integration script
+|   |   |-- builder_integration.js
+|   |   `-- style.css
+|   |-- templates/cms/                        # Django templates for pages and builder editor
+|   |   |-- base.html
+|   |   |-- builder_editor.html
+|   |   |-- index.html
+|   |   `-- page_detail.html
+|   |-- admin.py                              # Django admin configuration
+|   |-- apps.py                               # CMS app configuration
+|   |-- builder_adapter.py                    # Builder payload validation and rendering
+|   |-- context_processors.py                 # Navigation menu support
+|   |-- models.py                             # Page model and builder content fields
+|   |-- tests.py                              # CMS and builder endpoint tests
+|   |-- urls.py                               # CMS URL routes
+|   `-- views.py                              # Page and builder views
+|
+|-- config/                                   # Django project configuration
+|   |-- asgi.py
+|   |-- settings.py                           # Settings, installed apps, static files, TinyMCE
+|   |-- urls.py                               # Root URL configuration
+|   `-- wsgi.py
+|
+|-- frontend/
+|   `-- Web-Design-Studio/                    # Standalone visual web builder
+|       |-- README.md                         # Builder-specific documentation
+|       `-- web_design_studio/
+|           |-- css/studio_style.css          # Builder UI styles
+|           |-- data/                         # HTML, JS, API component libraries and spreadsheets
+|           |-- img/design_it_logo.png        # Builder image assets
+|           |-- js/app.js                     # Builder entry script
+|           |-- js/modules/                   # Builder managers for canvas, export, history, etc.
+|           |-- excel_to_json2.py             # Spreadsheet-to-JSON component conversion
+|           `-- index.html                    # Standalone builder entry point
+|
+|-- .gitignore                                # Ignored local/generated files
+|-- manage.py                                 # Django management entry point
+|-- requirements.txt                          # Python dependencies
+`-- README.md                                 # Project documentation
 ```
+
 
 ---
 
