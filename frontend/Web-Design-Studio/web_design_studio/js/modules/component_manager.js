@@ -360,7 +360,9 @@ class ComponentManager {
                 data.js = item.JS;
             }
             
-            e.dataTransfer.setData('text/html', JSON.stringify(data));
+            const serializedData = JSON.stringify(data);
+            e.dataTransfer.setData('application/json', serializedData);
+            e.dataTransfer.setData('text/plain', serializedData);
             e.dataTransfer.effectAllowed = 'copy';
             
             // Add visual feedback
