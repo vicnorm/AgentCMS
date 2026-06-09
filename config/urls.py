@@ -22,4 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path("", include("cms.urls")),
+
+    # API routes for the AgentCMS ↔ KNIME integration
+    path("api/knime/", include("api.urls")),
 ]
